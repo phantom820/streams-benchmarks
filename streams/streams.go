@@ -6,12 +6,16 @@ import (
 	"math/rand"
 	"os"
 	"streams-benchmarks/benchmarks"
+	"streams-benchmarks/data"
 	"strings"
+	"time"
 
 	"github.com/phantom820/streams"
 )
 
+// generateSlice generate slice of integer from 1-> n
 func generateSlice(n int) []int {
+
 	slice := make([]int, n)
 	for i := 0; i < n; i++ {
 		slice[i] = i + 1
@@ -19,8 +23,16 @@ func generateSlice(n int) []int {
 	return slice
 }
 
-// CountFizzBuzz counts how many numbers are divisible by 3 and 5 in the range [1,n].
-func CountFizzBuzz(f *os.File, benchmark *benchmarks.Benchmark, sizesTable []int, concurrencyTable []int) {
+func randomSlice(max, n int) []int {
+	slice := make([]int, n)
+	for i := 0; i < n; i++ {
+		slice[i] = rand.Intn(max)
+	}
+	return slice
+}
+
+// CountSuccesfulLogins how many numbers are divisible by 3 and 5 in the range [1,n].
+func CountSuccesfulLogins(f *os.File, benchmark *benchmarks.Benchmark, sizesTable []int, concurrencyTable []int) {
 
 	type config struct {
 		concurrencyTable []int
@@ -33,13 +45,15 @@ func CountFizzBuzz(f *os.File, benchmark *benchmarks.Benchmark, sizesTable []int
 
 	for key, config := range configMap {
 		for _, size := range sizesTable {
-			slice := generateSlice(size)
+			slice := data.LoadWebLogData()
 			for _, concurrency := range config.concurrencyTable {
 				r := benchmark.Benchmark(key, func() {
-					stream := streams.NewFromSlice(func() []int { return slice }, concurrency)
-					stream.Filter(func(x int) bool { return x%3 == 0 && x%5 == 0 }).Count()
+					stream := streams.FromSlice(func() []data.WebLog { return slice }, concurrency)
+					stream.Filter(func(x data.WebLog) bool {
+						return x.Status == "200" && strings.Contains(x.URL, "login")
+					}).Count()
 				})
-				fmt.Fprintf(f, "%s,%s,%v,%v,%v\n", r.Name, "CountFizzBuzz", size, concurrency, r.Duration)
+				fmt.Fprintf(f, "%s,%s,%v,%v,%v\n", r.Name, "CountSuccesfulLogins", size, concurrency, r.Duration)
 			}
 		}
 	}
@@ -80,13 +94,42 @@ func CountPrimes(f *os.File, benchmark *benchmarks.Benchmark, sizesTable []int, 
 			slice := generateSlice(size)
 			for _, concurrency := range config.concurrencyTable {
 				r := benchmark.Benchmark(key, func() {
-					stream := streams.NewFromSlice(func() []int { return slice }, concurrency)
+					stream := streams.FromSlice(func() []int { return slice }, concurrency)
 					stream.Filter(func(x int) bool { return isPrime(x) }).Count()
 				})
 				fmt.Fprintf(f, "%s,%s,%v,%v,%v\n", r.Name, "CountPrimes", size, concurrency, r.Duration)
 			}
 		}
 	}
+}
+
+// FrequencyCount Counts how many times a given value occurs in list of random integers.
+func FrequencyCount(f *os.File, benchmark *benchmarks.Benchmark, sizesTable []int, concurrencyTable []int) {
+
+	type config struct {
+		concurrencyTable []int
+	}
+
+	configMap := map[string]config{
+		"sequentialStream": {concurrencyTable: []int{1}},
+		"concurrentStream": {concurrencyTable: concurrencyTable},
+	}
+	rand.Seed(time.Now().Unix())
+	max := 1000 // interval for drawing values.
+	for key, config := range configMap {
+		for _, size := range sizesTable {
+			slice := randomSlice(max, size)
+			for _, concurrency := range config.concurrencyTable {
+				r := benchmark.Benchmark(key, func() {
+					key := rand.Intn(max)
+					_ = streams.FromSlice(func() []int { return slice }, concurrency).
+						Filter(func(x int) bool { return x == key }).Count()
+				})
+				fmt.Fprintf(f, "%s,%s,%v,%v,%v\n", r.Name, "FrequencyCount", size, concurrency, r.Duration)
+			}
+		}
+	}
+
 }
 
 // Sum sums the values in the range [1,n].
@@ -106,10 +149,34 @@ func Sum(f *os.File, benchmark *benchmarks.Benchmark, sizesTable []int, concurre
 			slice := generateSlice(size)
 			for _, concurrency := range config.concurrencyTable {
 				r := benchmark.Benchmark(key, func() {
-					stream := streams.NewFromSlice(func() []int { return slice }, concurrency)
-					stream.Map(func(x int) interface{} { return x * x }).Reduce(func(x, y interface{}) interface{} { return x.(int) + y.(int) })
+					_, _ = streams.FromSlice(func() []int { return slice }, concurrency).Reduce(func(x, y int) int { return x + y })
 				})
 				fmt.Fprintf(f, "%s,%s,%v,%v,%v\n", r.Name, "Sum", size, concurrency, r.Duration)
+			}
+		}
+	}
+}
+
+// Product compute product of the values in the range [1,n].
+func Product(f *os.File, benchmark *benchmarks.Benchmark, sizesTable []int, concurrencyTable []int) {
+
+	type config struct {
+		concurrencyTable []int
+	}
+
+	configMap := map[string]config{
+		"sequentialStream": {concurrencyTable: []int{1}},
+		"concurrentStream": {concurrencyTable: concurrencyTable},
+	}
+
+	for key, config := range configMap {
+		for _, size := range sizesTable {
+			slice := generateSlice(size)
+			for _, concurrency := range config.concurrencyTable {
+				r := benchmark.Benchmark(key, func() {
+					_, _ = streams.FromSlice(func() []int { return slice }, concurrency).Reduce(func(x, y int) int { return x * y })
+				})
+				fmt.Fprintf(f, "%s,%s,%v,%v,%v\n", r.Name, "Product", size, concurrency, r.Duration)
 			}
 		}
 	}
@@ -152,7 +219,7 @@ func generateEmployees(n int) []Employee {
 	return employees
 }
 
-// Transformation
+// Transformation on a custom data type.
 func Transformation(f *os.File, benchmark *benchmarks.Benchmark, sizesTable []int, concurrencyTable []int) {
 
 	type config struct {
@@ -169,8 +236,8 @@ func Transformation(f *os.File, benchmark *benchmarks.Benchmark, sizesTable []in
 			slice := generateEmployees(size)
 			for _, concurrency := range config.concurrencyTable {
 				r := benchmark.Benchmark(key, func() {
-					stream := streams.NewFromSlice(func() []Employee { return slice }, concurrency)
-					stream.Filter(func(x Employee) bool { return x.age > 20 && x.rating > 0.5 }).Map(func(x Employee) interface{} {
+					stream := streams.FromSlice(func() []Employee { return slice }, concurrency)
+					stream.Filter(func(x Employee) bool { return x.age > 20 && x.rating > 0.5 }).Map(func(x Employee) Employee {
 						newEmployee := Employee{
 							id:      x.id,
 							name:    strings.ToUpper(x.name),
