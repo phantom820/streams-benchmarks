@@ -5,4 +5,4 @@ This provides some idea on the performance of streams that have been provided [s
 
 
 
-![streams](https://user-images.githubusercontent.com/47748901/182045093-0361bbc5-dd19-4ea6-901e-26bf67bb043d.png)
+![streams](https://github.com/phantom820/streams-benchmarks/blob/main/visuals/streams.png)
