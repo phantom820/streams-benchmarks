@@ -3,6 +3,8 @@ github.com/phantom820/collections v0.3.0-alpha.2.7 h1:K7+/URIOvG7Z5ap5kY6QfZU9jz
 github.com/phantom820/collections v0.3.0-alpha.2.7/go.mod h1:4Ssq36ogqMGZP+yA7LckIyncH5s6nMJY3y4rRQgVB00=
 github.com/phantom820/collections v0.3.0-alpha.2.8 h1:W716srCW1I9AFpt3wGFFTst6adKbYXuLo+RptoQ79Tc=
 github.com/phantom820/collections v0.3.0-alpha.2.8/go.mod h1:4Ssq36ogqMGZP+yA7LckIyncH5s6nMJY3y4rRQgVB00=
+github.com/phantom820/collections v0.3.0-alpha.2.9 h1:qCtH7FswT4cnBsyYY4Jwj3zsLufkFEXVUoGJqWZm2wg=
+github.com/phantom820/collections v0.3.0-alpha.2.9/go.mod h1:4Ssq36ogqMGZP+yA7LckIyncH5s6nMJY3y4rRQgVB00=
 github.com/phantom820/streams v0.0.1-alpha.1 h1:3gXrp0vuCvuI9FV3q0PXqmE3m+GDUnGd7evuq4fZEE0=
 github.com/phantom820/streams v0.0.1-alpha.1/go.mod h1:Tx7Ljs8QSCXyekkoj1J5XUuN5vE9kDug2qGHrqwRfdg=
 github.com/phantom820/streams v0.0.1-alpha.3 h1:XA+ZkALb5Q1y8Fys0oinZNKMJv8BNU7mRAMoZ7yynY0=
@@ -11,6 +13,10 @@ github.com/phantom820/streams v0.0.1-alpha.4 h1:ndGkxXTTNgJFhkv1qWoTfntUPE5Wev93
 github.com/phantom820/streams v0.0.1-alpha.4/go.mod h1:Tx7Ljs8QSCXyekkoj1J5XUuN5vE9kDug2qGHrqwRfdg=
 github.com/phantom820/streams v0.0.1-alpha.5 h1:K4Tli+hJ9Z23Hv2u/gNmv1kA+qPnkY2aQHiB3jlLraQ=
 github.com/phantom820/streams v0.0.1-alpha.5/go.mod h1:Tx7Ljs8QSCXyekkoj1J5XUuN5vE9kDug2qGHrqwRfdg=
+github.com/phantom820/streams v0.0.1-alpha.7 h1:vELDl1KUbhZQNVhtyvppup7fqE+xq+WS8xd6R5ZI0aQ=
+github.com/phantom820/streams v0.0.1-alpha.7/go.mod h1:Tx7Ljs8QSCXyekkoj1J5XUuN5vE9kDug2qGHrqwRfdg=
+github.com/phantom820/streams v0.0.1-alpha.8 h1:8Ag7VQ4p36epC8HzCu6xkaKIgK0aFQDAuEQrMrxx4og=
+github.com/phantom820/streams v0.0.1-alpha.8/go.mod h1:Tx7Ljs8QSCXyekkoj1J5XUuN5vE9kDug2qGHrqwRfdg=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/stretchr/testify v1.7.1 h1:5TQK59W5E3v0r2duFAb7P95B6hEeOyEnHRa8MjYSMTY=
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c h1:dUUwHk2QECo/6vqA44rthZ8ie2QXMNeKRTHCNY2nXvo=

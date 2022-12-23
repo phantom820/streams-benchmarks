@@ -29,15 +29,11 @@ func readCsvFile(filePath string) [][]string {
 	return records
 }
 
-func LoadWebLogData() []WebLog {
-	data := readCsvFile("data/weblog.csv")
-	webLogs := make([]WebLog, len(data)-1)
-	j := 0
-	for i := 1; i < len(data); i++ {
-		row := data[i]
-		webLog := WebLog{IP: row[0], Time: row[1], URL: row[2], Status: row[3]}
-		webLogs[j] = webLog
-		j++
+func ReadTweets(filPath string) []string {
+	rows := readCsvFile(filPath)
+	tweets := make([]string, len(rows))
+	for i := range rows {
+		tweets[i] = rows[i][5]
 	}
-	return webLogs
+	return tweets
 }
